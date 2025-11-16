@@ -1,6 +1,23 @@
+<div align="center">
+
 # LLM Cost Operations SDK
 
-Enterprise-grade TypeScript SDK for the LLM Cost Operations Platform.
+[![npm version](https://img.shields.io/npm/v/@llm-dev-ops/llm-cost-ops-sdk.svg?style=flat-square)](https://www.npmjs.com/package/@llm-dev-ops/llm-cost-ops-sdk)
+[![npm downloads](https://img.shields.io/npm/dm/@llm-dev-ops/llm-cost-ops-sdk.svg?style=flat-square)](https://www.npmjs.com/package/@llm-dev-ops/llm-cost-ops-sdk)
+[![License](https://img.shields.io/npm/l/@llm-dev-ops/sdk.svg?style=flat-square)](https://github.com/globalbusinessadvisors/llm-cost-ops/blob/main/LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3+-blue.svg?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Bundle Size](https://img.shields.io/bundlephobia/minzip/@llm-dev-ops/llm-cost-ops-sdk?style=flat-square)](https://bundlephobia.com/package/@llm-dev-ops/llm-cost-ops-sdk)
+[![GitHub Stars](https://img.shields.io/github/stars/globalbusinessadvisors/llm-cost-ops?style=flat-square&logo=github)](https://github.com/globalbusinessadvisors/llm-cost-ops)
+[![GitHub Issues](https://img.shields.io/github/issues/globalbusinessadvisors/llm-cost-ops?style=flat-square&logo=github)](https://github.com/globalbusinessadvisors/llm-cost-ops/issues)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://github.com/globalbusinessadvisors/llm-cost-ops/blob/main/CONTRIBUTING.md)
+
+**Enterprise-grade TypeScript SDK for the LLM Cost Operations Platform**
+
+[Features](#features) • [Installation](#installation) • [Quick Start](#quick-start) • [Documentation](#api-methods) • [Examples](#error-handling)
+
+</div>
+
+---
 
 ## Features
 
@@ -17,7 +34,7 @@ Enterprise-grade TypeScript SDK for the LLM Cost Operations Platform.
 ## Installation
 
 ```bash
-npm install @llm-cost-ops/sdk
+npm install @llm-dev-ops/llm-cost-ops-sdk
 ```
 
 ## Quick Start

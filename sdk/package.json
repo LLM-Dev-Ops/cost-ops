@@ -1,6 +1,6 @@
 {
-  "name": "@llm-cost-ops/sdk",
-  "version": "1.0.0",
+  "name": "@llm-dev-ops/llm-cost-ops-sdk",
+  "version": "1.0.1",
   "description": "Enterprise-grade TypeScript SDK for LLM Cost Operations Platform",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -45,7 +45,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/llm-devops/llm-cost-ops"
+    "url": "https://github.com/globalbusinessadvisors/llm-cost-ops"
   },
   "engines": {
     "node": ">=18.0.0"
