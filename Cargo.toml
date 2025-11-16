@@ -109,7 +109,7 @@ chrono-tz = "0.8"
 
 [dev-dependencies]
 # Benchmarking
-criterion = { version = "0.5", features = ["html_reports", "async_tokio"] }
+criterion = { version = "0.7", features = ["html_reports", "async_tokio"] }
 
 # Testing utilities
 tempfile = "3.8"
