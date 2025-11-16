@@ -26,6 +26,7 @@ exclude = [
     "*.yml",
     "*.yaml",
     "*.json",
+    "!.sqlx/**/*.json",
     "*.toml",
     "!Cargo.toml",
 ]
