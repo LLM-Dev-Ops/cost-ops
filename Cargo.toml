@@ -21,6 +21,10 @@ exclude = [
     "deployment/",
     "tests/",
     "benches/",
+    "sdk/",
+    "python-sdk/",
+    "scripts/",
+    "migrations_postgres/",
     "*.md",
     "!README-crates.md",
     "*.yml",
@@ -29,6 +33,7 @@ exclude = [
     "!.sqlx/**/*.json",
     "*.toml",
     "!Cargo.toml",
+    "!Cargo.lock",
 ]
 
 [dependencies]
