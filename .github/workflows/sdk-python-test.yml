@@ -118,7 +118,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: pytest-results-${{ matrix.os }}-${{ matrix.python-version }}
           path: ${{ env.WORKING_DIR }}/pytest-results.xml
@@ -126,7 +126,7 @@ jobs:
 
       - name: Upload coverage report
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: coverage-report-html
           path: ${{ env.WORKING_DIR }}/htmlcov
@@ -190,7 +190,7 @@ jobs:
           twine check dist/*
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: python-sdk-dist
           path: ${{ env.WORKING_DIR }}/dist/

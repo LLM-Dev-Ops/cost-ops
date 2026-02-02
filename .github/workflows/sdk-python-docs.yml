@@ -267,7 +267,7 @@ jobs:
           echo "::endgroup::"
 
       - name: Upload documentation artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: python-sdk-documentation
           path: |
@@ -422,7 +422,7 @@ jobs:
           echo "::endgroup::"
 
       - name: Upload changelog
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: changelog
           path: CHANGELOG.md

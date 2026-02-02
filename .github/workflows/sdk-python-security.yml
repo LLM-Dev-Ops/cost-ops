@@ -62,7 +62,7 @@ jobs:
 
       - name: Upload dependency scan reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: dependency-scan-reports
           path: |
@@ -142,7 +142,7 @@ jobs:
 
       - name: Upload SAST reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: sast-reports
           path: |
@@ -181,7 +181,7 @@ jobs:
 
       - name: Upload Snyk report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: snyk-report
           path: snyk-report.json
@@ -198,7 +198,7 @@ jobs:
 
       - name: Upload Snyk license report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: snyk-license-report
           path: snyk-license-report.json
@@ -251,7 +251,7 @@ jobs:
 
       - name: Upload secret scan report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: secret-scan-report
           path: trufflehog-report.json
@@ -295,7 +295,7 @@ jobs:
           echo "::endgroup::"
 
       - name: Upload SBOM artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: sbom
           path: |
