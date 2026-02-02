@@ -89,7 +89,7 @@ reqwest = { version = "0.11", features = ["json", "rustls-tls"], default-feature
 hyper = { version = "1.0", features = ["server", "http1", "http2"] }
 
 # Event Streaming (pinned to avoid rmp-serde edition2024 requirement)
-async-nats = "0.32"
+async-nats = "0.46"
 redis = { version = "0.23", features = ["tokio-comp", "streams"] }
 
 # Retry & Resilience
