@@ -97,7 +97,7 @@ backoff = { version = "0.4", features = ["tokio"] }
 deadpool = "0.10"
 
 # Validation
-validator = { version = "0.16", features = ["derive"] }
+validator = { version = "0.20", features = ["derive"] }
 
 # Authentication & Security
 jsonwebtoken = "9.2"
