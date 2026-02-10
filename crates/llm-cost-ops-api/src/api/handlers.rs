@@ -1,11 +1,16 @@
 // API request handlers
 
-use axum::{extract::Query, Json};
+use axum::{extract::Query, Extension, Json};
 use chrono::Utc;
 use validator::Validate;
 
+use llm_cost_ops::agents::execution_span::{
+    ArtifactRef, ExecutionContext, ExecutionGraphBuilder,
+};
+
 use super::{
     error::{ApiError, ApiResult},
+    execution_context::InstrumentedResponse,
     pagination::{PaginatedResponse, PaginationParams},
     types::*,
     validation::ValidatedJson,
@@ -256,9 +261,16 @@ pub async fn budget_enforcement_inspect() -> ApiResult<Json<serde_json::Value>> 
 }
 
 /// Budget enforcement analyze endpoint
+///
+/// Instrumented as an Agentics FEU agent execution endpoint.
+/// Requires `x-execution-id` and `x-parent-span-id` headers.
 pub async fn budget_enforcement_analyze(
+    Extension(exec_ctx): Extension<ExecutionContext>,
     Json(request): Json<serde_json::Value>,
-) -> ApiResult<Json<serde_json::Value>> {
+) -> ApiResult<Json<InstrumentedResponse<serde_json::Value>>> {
+    let mut builder = ExecutionGraphBuilder::new(&exec_ctx);
+    let agent_span_id = builder.start_agent_span("budget-enforcement");
+
     // Extract request parameters with defaults
     let budget_id = request.get("budget_id")
         .and_then(|v| v.as_str())
@@ -310,7 +322,7 @@ pub async fn budget_enforcement_analyze(
         _ => "continue",
     };
 
-    Ok(Json(serde_json::json!({
+    let data = serde_json::json!({
         "signal_id": signal_id,
         "budget_id": budget_id,
         "signal_type": signal_type,
@@ -323,7 +335,23 @@ pub async fn budget_enforcement_analyze(
         "message": message,
         "recommended_action": recommended_action,
         "timestamp": Utc::now().to_rfc3339()
-    })))
+    });
+
+    // Complete the agent span with the signal artifact
+    builder.complete_agent_span(agent_span_id, vec![
+        ArtifactRef {
+            artifact_id: signal_id.clone(),
+            artifact_type: "budget_signal".to_string(),
+            reference: format!("signals/{}", signal_id),
+        },
+    ]);
+
+    let graph = builder.finalize().map_err(ApiError::from)?;
+
+    Ok(Json(InstrumentedResponse {
+        data,
+        execution_graph: graph,
+    }))
 }
 
 /// Cost forecasting agent info
@@ -344,9 +372,16 @@ pub async fn cost_forecasting_info() -> ApiResult<Json<serde_json::Value>> {
 }
 
 /// Cost forecasting forecast endpoint
+///
+/// Instrumented as an Agentics FEU agent execution endpoint.
+/// Requires `x-execution-id` and `x-parent-span-id` headers.
 pub async fn cost_forecasting_forecast(
+    Extension(exec_ctx): Extension<ExecutionContext>,
     Json(request): Json<serde_json::Value>,
-) -> ApiResult<Json<serde_json::Value>> {
+) -> ApiResult<Json<InstrumentedResponse<serde_json::Value>>> {
+    let mut builder = ExecutionGraphBuilder::new(&exec_ctx);
+    let agent_span_id = builder.start_agent_span("cost-forecasting");
+
     let horizon_days = request.get("horizon")
         .and_then(|v| v.as_i64())
         .unwrap_or(30);
@@ -354,15 +389,32 @@ pub async fn cost_forecasting_forecast(
         .and_then(|v| v.as_f64())
         .unwrap_or(0.95);
 
-    // Mock forecast response (deterministic for reproducibility)
-    Ok(Json(serde_json::json!({
-        "forecast_id": uuid::Uuid::new_v4().to_string(),
+    let forecast_id = uuid::Uuid::new_v4().to_string();
+
+    let data = serde_json::json!({
+        "forecast_id": forecast_id,
         "horizon_days": horizon_days,
         "confidence": confidence,
         "forecasts": [],
         "model": "simple_moving_average",
         "timestamp": Utc::now().to_rfc3339()
-    })))
+    });
+
+    // Complete the agent span with the forecast artifact
+    builder.complete_agent_span(agent_span_id, vec![
+        ArtifactRef {
+            artifact_id: forecast_id.clone(),
+            artifact_type: "forecast_output".to_string(),
+            reference: format!("forecasts/{}", forecast_id),
+        },
+    ]);
+
+    let graph = builder.finalize().map_err(ApiError::from)?;
+
+    Ok(Json(InstrumentedResponse {
+        data,
+        execution_graph: graph,
+    }))
 }
 
 /// ROI estimation agent info

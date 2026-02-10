@@ -115,6 +115,10 @@ pub use agents::{
     BudgetEnforcementConfig, BudgetSignalSeverity, BudgetViolationType,
     // Registry
     AgentRegistry, AgentMetadata,
+    // Execution Graph (Agentics FEU)
+    ExecutionContext, ExecutionSpan, ExecutionGraph, ExecutionGraphBuilder,
+    ExecutionGraphError, SpanType, SpanStatus, ArtifactRef,
+    extract_execution_context,
 };
 
 /// Library version

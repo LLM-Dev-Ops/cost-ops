@@ -21,6 +21,7 @@ pub mod contracts;
 pub mod ruvector;
 pub mod budget_enforcement;
 pub mod registry;
+pub mod execution_span;
 
 // Re-export commonly used types
 pub use contracts::{
@@ -36,3 +37,9 @@ pub use budget_enforcement::{
 };
 
 pub use registry::{AgentRegistry, AgentMetadata};
+
+pub use execution_span::{
+    ExecutionContext, ExecutionSpan, ExecutionGraph, ExecutionGraphBuilder,
+    ExecutionGraphError, SpanType, SpanStatus, ArtifactRef,
+    extract_execution_context,
+};

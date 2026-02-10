@@ -195,6 +195,12 @@ impl From<serde_json::Error> for ApiError {
     }
 }
 
+impl From<llm_cost_ops::ExecutionGraphError> for ApiError {
+    fn from(err: llm_cost_ops::ExecutionGraphError) -> Self {
+        Self::BadRequest(err.to_string())
+    }
+}
+
 impl From<validator::ValidationErrors> for ApiError {
     fn from(errors: validator::ValidationErrors) -> Self {
         let validation_errors: Vec<ValidationError> = errors
