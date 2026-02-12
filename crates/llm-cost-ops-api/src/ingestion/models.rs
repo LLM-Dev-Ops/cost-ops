@@ -115,6 +115,24 @@ pub struct BatchIngestionRequest {
     pub records: Vec<UsageWebhookPayload>,
 }
 
+/// Lightweight cost authority provenance for ingestion responses
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CostAuthorityProvenance {
+    /// The canonical source identifier
+    pub source: String,
+    /// Whether this response is from the authoritative service
+    pub authoritative: bool,
+}
+
+impl Default for CostAuthorityProvenance {
+    fn default() -> Self {
+        Self {
+            source: "llm-costops".to_string(),
+            authoritative: true,
+        }
+    }
+}
+
 /// Ingestion response
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct IngestionResponse {
@@ -136,6 +154,9 @@ pub struct IngestionResponse {
 
     /// Processing timestamp
     pub processed_at: DateTime<Utc>,
+
+    /// Cost authority provenance
+    pub cost_authority: CostAuthorityProvenance,
 }
 
 /// Ingestion status

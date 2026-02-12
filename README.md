@@ -16,6 +16,15 @@ LLM-CostOps is the financial backbone of the LLM DevOps ecosystem, providing:
 - **ROI Attribution** - Correlate costs with performance outcomes and business value
 - **Cost Optimization** - Enable intelligent routing and provider selection based on cost efficiency
 
+### Cost Authority
+
+LLM-CostOps is the **designated single source of truth** for all LLM cost
+data across the ecosystem. All cost numbers, pricing tables, and financial
+metrics originate exclusively from this platform. No other repository may
+compute or estimate costs independently. See
+[COST_AUTHORITY.md](docs/governance/COST_AUTHORITY.md) and
+[ADR-001](docs/adr/001-costops-single-source-of-truth.md) for details.
+
 ## Features
 
 ### Core Capabilities

@@ -46,5 +46,8 @@ pub fn create_routes() -> Router {
         .route("/api/v1/agents/cost-forecasting/forecast", post(handlers::cost_forecasting_forecast))
         .layer(middleware::from_fn(execution_context::require_execution_context));
 
-    data_routes.merge(agent_exec_routes)
+    let all_routes = data_routes.merge(agent_exec_routes);
+
+    // Apply cost authority middleware to all routes
+    all_routes.layer(middleware::from_fn(super::middleware::cost_authority_middleware))
 }

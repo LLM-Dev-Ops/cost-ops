@@ -235,6 +235,25 @@ export function createLoggingInterceptor(debug: boolean): {
 }
 
 /**
+ * Built-in response interceptor that validates cost authority metadata.
+ * Logs a warning if a cost-bearing response is missing the X-Cost-Authority header,
+ * indicating the response may not have originated from the official LLM-CostOps API.
+ */
+export function createCostAuthorityInterceptor(): ResponseInterceptor {
+  return <T>(context: ResponseContext<T>): ResponseContext<T> => {
+    const authorityHeader = context.response.headers['x-cost-authority'];
+    if (!authorityHeader || authorityHeader !== 'llm-costops') {
+      console.warn(
+        '[CostOps SDK] Response missing X-Cost-Authority header. ' +
+        'Ensure you are connecting to the official LLM-CostOps API. ' +
+        'See: docs/governance/COST_AUTHORITY.md'
+      );
+    }
+    return context;
+  };
+}
+
+/**
  * Built-in request interceptor for adding authentication headers
  */
 export function createAuthInterceptor(apiKey: string): RequestInterceptor {

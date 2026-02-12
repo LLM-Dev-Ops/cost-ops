@@ -1,0 +1,142 @@
+name: Reusable Cost Authority Lint
+
+# Reusable workflow that dependent repositories can adopt to detect local
+# cost calculations. LLM-CostOps is the single authoritative source for
+# all cost data. See docs/governance/COST_AUTHORITY.md.
+
+on:
+  workflow_call:
+    inputs:
+      language:
+        required: true
+        type: string
+        description: 'Primary language: python, typescript, javascript, go, java, rust'
+      working-directory:
+        required: false
+        type: string
+        default: '.'
+      severity:
+        required: false
+        type: string
+        default: 'error'
+        description: '"error" fails CI, "warning" annotates only'
+      exclude-paths:
+        required: false
+        type: string
+        default: ''
+        description: 'Comma-separated paths to exclude from scanning'
+
+jobs:
+  cost-authority-lint:
+    name: Cost Authority Compliance Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Scan for local cost calculations
+        working-directory: ${{ inputs.working-directory }}
+        env:
+          SEVERITY: ${{ inputs.severity }}
+          EXCLUDE_PATHS: ${{ inputs.exclude-paths }}
+        run: |
+          set -euo pipefail
+
+          VIOLATIONS=0
+          EXCLUDE_ARGS=""
+
+          if [ -n "$EXCLUDE_PATHS" ]; then
+            IFS=',' read -ra PATHS <<< "$EXCLUDE_PATHS"
+            for p in "${PATHS[@]}"; do
+              EXCLUDE_ARGS="$EXCLUDE_ARGS --exclude-dir=$(echo "$p" | xargs)"
+            done
+          fi
+
+          echo "## Cost Authority Compliance Check" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+
+          # Pattern 1: Hardcoded token prices
+          echo "### Checking for hardcoded token prices..."
+          PRICE_PATTERNS='(price_per_(token|1k|million|1m)|cost_per_(token|1k|million|1m)|token_?price|token_?cost)\s*[:=]\s*[0-9]'
+          if grep -rn $EXCLUDE_ARGS -iE "$PRICE_PATTERNS" \
+              --include="*.py" --include="*.ts" --include="*.js" \
+              --include="*.rs" --include="*.go" --include="*.java" \
+              --include="*.yaml" --include="*.yml" --include="*.json" \
+              --include="*.toml" . 2>/dev/null; then
+            echo "::${SEVERITY}::Found hardcoded token prices. Use LLM-CostOps API/SDK instead."
+            echo "- :x: **Hardcoded token prices detected**" >> "$GITHUB_STEP_SUMMARY"
+            VIOLATIONS=$((VIOLATIONS + 1))
+          else
+            echo "- :white_check_mark: No hardcoded token prices" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          # Pattern 2: Local cost calculation functions
+          CALC_PATTERNS='(def |fn |function |const |let |var )(calculate_?cost|compute_?cost|estimate_?cost|calc_?llm_?cost|get_?token_?cost)'
+          if grep -rn $EXCLUDE_ARGS -iE "$CALC_PATTERNS" \
+              --include="*.py" --include="*.ts" --include="*.js" \
+              --include="*.rs" --include="*.go" --include="*.java" . 2>/dev/null; then
+            echo "::${SEVERITY}::Found local cost calculation functions. Delegate to LLM-CostOps."
+            echo "- :x: **Local cost calculation functions detected**" >> "$GITHUB_STEP_SUMMARY"
+            VIOLATIONS=$((VIOLATIONS + 1))
+          else
+            echo "- :white_check_mark: No local cost calculation functions" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          # Pattern 3: Local pricing tables/dictionaries
+          PRICING_TABLE='(pricing|prices|model_costs|token_rates|rate_card)\s*[:=]\s*[\[{]'
+          if grep -rn $EXCLUDE_ARGS -iE "$PRICING_TABLE" \
+              --include="*.py" --include="*.ts" --include="*.js" \
+              --include="*.rs" --include="*.go" --include="*.java" . 2>/dev/null; then
+            echo "::${SEVERITY}::Found local pricing tables. Use LLM-CostOps pricing API."
+            echo "- :x: **Local pricing tables detected**" >> "$GITHUB_STEP_SUMMARY"
+            VIOLATIONS=$((VIOLATIONS + 1))
+          else
+            echo "- :white_check_mark: No local pricing tables" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          # Pattern 4: Direct token-to-cost arithmetic
+          ARITHMETIC='(tokens?|input_tokens?|output_tokens?)\s*[\*/]\s*[0-9].*\b(price|cost|rate)\b'
+          if grep -rn $EXCLUDE_ARGS -iE "$ARITHMETIC" \
+              --include="*.py" --include="*.ts" --include="*.js" \
+              --include="*.rs" --include="*.go" --include="*.java" . 2>/dev/null; then
+            echo "::${SEVERITY}::Found direct token-to-cost arithmetic. Use LLM-CostOps calculation engine."
+            echo "- :x: **Direct token-to-cost arithmetic detected**" >> "$GITHUB_STEP_SUMMARY"
+            VIOLATIONS=$((VIOLATIONS + 1))
+          else
+            echo "- :white_check_mark: No direct token-to-cost arithmetic" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [ $VIOLATIONS -gt 0 ]; then
+            echo "**$VIOLATIONS violation(s) found.** See [COST_AUTHORITY.md](https://github.com/globalbusinessadvisors/llm-cost-ops/blob/main/docs/governance/COST_AUTHORITY.md)" >> "$GITHUB_STEP_SUMMARY"
+            if [ "$SEVERITY" = "error" ]; then
+              exit 1
+            fi
+          else
+            echo "**All checks passed.**" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Verify CostOps SDK dependency (Python)
+        if: inputs.language == 'python'
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          if [ -f "requirements.txt" ]; then
+            if ! grep -q "llm-cost-ops\|llm_cost_ops" requirements.txt; then
+              echo "::warning::llm-cost-ops SDK not found in requirements.txt"
+            fi
+          fi
+          if [ -f "pyproject.toml" ]; then
+            if ! grep -q "llm-cost-ops\|llm_cost_ops" pyproject.toml; then
+              echo "::warning::llm-cost-ops SDK not found in pyproject.toml"
+            fi
+          fi
+
+      - name: Verify CostOps SDK dependency (TypeScript/JavaScript)
+        if: inputs.language == 'typescript' || inputs.language == 'javascript'
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          if [ -f "package.json" ]; then
+            if ! grep -q "llm-cost-ops" package.json; then
+              echo "::warning::llm-cost-ops SDK not found in package.json"
+            fi
+          fi

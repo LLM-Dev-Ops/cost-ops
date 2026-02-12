@@ -170,6 +170,13 @@ Improvement: 50%
 - [ ] Input validation added where needed
 - [ ] Error messages don't leak sensitive information
 
+### Cost Authority
+
+- [ ] Changes do not introduce local cost calculations outside `domain/` or `engine/`
+- [ ] If modifying cost-bearing API responses, `CostAuthority` metadata is preserved
+- [ ] If adding new cost-bearing endpoints, `CostAuthority` metadata is included
+- [ ] SDK type parity maintained (Rust, TypeScript, Python)
+
 ### CI/CD
 
 - [ ] CI pipeline passes

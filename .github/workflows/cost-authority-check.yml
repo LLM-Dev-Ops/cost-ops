@@ -1,0 +1,64 @@
+name: Cost Authority Compliance
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'crates/**'
+      - 'sdk/**'
+      - 'python-sdk/**'
+      - 'agents/**'
+
+jobs:
+  # Self-check: ensure cost-ops itself follows its own patterns
+  # (domain/ and engine/ are excluded since that's where calculations live)
+  self-check:
+    name: Self-Compliance Check
+    uses: ./.github/workflows/reusable/cost-authority-lint.yml
+    with:
+      language: rust
+      working-directory: '.'
+      severity: warning
+      exclude-paths: 'crates/llm-cost-ops/src/domain,crates/llm-cost-ops/src/engine,tests,benches,examples,src,src.backup'
+
+  # Verify authority metadata types exist in all layers
+  verify-authority-types:
+    name: Verify Authority Types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check CostAuthority struct in Rust API
+        run: |
+          if ! grep -q "pub struct CostAuthority" crates/llm-cost-ops-api/src/api/types.rs; then
+            echo "::error::CostAuthority struct missing from API types"
+            exit 1
+          fi
+
+      - name: Check cost authority middleware
+        run: |
+          if ! grep -q "cost_authority_middleware" crates/llm-cost-ops-api/src/api/middleware.rs; then
+            echo "::error::cost_authority_middleware missing from API middleware"
+            exit 1
+          fi
+
+      - name: Check TypeScript SDK type parity
+        run: |
+          if ! grep -q "CostAuthority" sdk/src/types/index.ts; then
+            echo "::error::CostAuthority type missing from TypeScript SDK"
+            exit 1
+          fi
+
+      - name: Check Python SDK type parity
+        run: |
+          if ! grep -q "CostAuthority" python-sdk/llm_cost_ops/types.py; then
+            echo "::error::CostAuthority type missing from Python SDK"
+            exit 1
+          fi
+
+      - name: Check domain model provenance
+        run: |
+          if ! grep -q "cost_authority_source" crates/llm-cost-ops/src/domain/cost.rs; then
+            echo "::error::cost_authority_source field missing from CostRecord domain model"
+            exit 1
+          fi

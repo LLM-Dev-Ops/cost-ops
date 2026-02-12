@@ -67,7 +67,25 @@ export interface ApiResponse<T = unknown> {
     duration: number;
     /** Number of retry attempts made */
     retries: number;
+    /** Cost authority provenance (present on cost-bearing responses) */
+    costAuthority?: CostAuthority;
   };
+}
+
+/**
+ * Cost authority provenance metadata.
+ * Present on all cost-bearing responses to prove data originated
+ * from the canonical LLM-CostOps service.
+ */
+export interface CostAuthority {
+  /** The canonical source identifier (always "llm-costops") */
+  source: string;
+  /** Whether this response is from the authoritative service */
+  authoritative: boolean;
+  /** Version of the cost calculation engine */
+  version: string;
+  /** When the cost was computed (ISO 8601) */
+  computedAt?: string;
 }
 
 /**
@@ -90,6 +108,8 @@ export interface CostMetric {
   requests?: number;
   /** Additional metadata */
   metadata?: Record<string, unknown>;
+  /** Cost authority provenance */
+  costAuthority?: CostAuthority;
 }
 
 /**
@@ -108,6 +128,8 @@ export interface UsageStats {
   periodEnd: string;
   /** Breakdown by service */
   byService: Record<string, ServiceUsage>;
+  /** Cost authority provenance */
+  costAuthority?: CostAuthority;
 }
 
 /**

@@ -31,6 +31,10 @@ pub struct CostRecord {
     pub tags: Vec<String>,
 
     pub calculated_at: DateTime<Utc>,
+
+    /// Authority source identifier. Always "llm-costops" for records
+    /// produced by this system, enabling downstream systems to verify provenance.
+    pub cost_authority_source: String,
 }
 
 #[derive(Debug, Clone)]
@@ -67,6 +71,7 @@ impl CostRecord {
             project_id: None,
             tags: Vec::new(),
             calculated_at: Utc::now(),
+            cost_authority_source: "llm-costops".to_string(),
         }
     }
 

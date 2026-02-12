@@ -21,12 +21,40 @@ pub struct ApiResponse<T> {
     pub meta: Option<ResponseMetadata>,
 }
 
+/// Cost authority provenance metadata.
+/// Included in all cost-bearing API responses to prove data originated
+/// from the canonical LLM-CostOps service.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CostAuthority {
+    /// The canonical source identifier
+    pub source: String,
+    /// Whether this response is from the authoritative service
+    pub authoritative: bool,
+    /// Version of the cost calculation engine
+    pub version: String,
+    /// Timestamp when the cost was computed
+    pub computed_at: DateTime<Utc>,
+}
+
+impl Default for CostAuthority {
+    fn default() -> Self {
+        Self {
+            source: "llm-costops".to_string(),
+            authoritative: true,
+            version: crate::VERSION.to_string(),
+            computed_at: Utc::now(),
+        }
+    }
+}
+
 /// Response metadata
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ResponseMetadata {
     pub request_id: Option<String>,
     pub timestamp: DateTime<Utc>,
     pub version: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cost_authority: Option<CostAuthority>,
 }
 
 impl<T> ApiResponse<T> {
@@ -87,6 +115,7 @@ pub struct SubmitUsageResponse {
     pub estimated_cost: Decimal,
     pub currency: Currency,
     pub processed_at: DateTime<Utc>,
+    pub cost_authority: CostAuthority,
 }
 
 // ===== Cost API Types =====
@@ -133,6 +162,7 @@ pub struct CostSummary {
     pub period_end: DateTime<Utc>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub breakdown: Option<Vec<CostBreakdown>>,
+    pub cost_authority: CostAuthority,
 }
 
 /// Cost breakdown by dimension
@@ -176,6 +206,7 @@ pub struct PricingResponse {
     pub effective_date: DateTime<Utc>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
+    pub cost_authority: CostAuthority,
 }
 
 // ===== Analytics API Types =====
@@ -253,6 +284,7 @@ pub struct AnalyticsSummary {
     pub total_requests: u64,
     pub average_cost_per_request: Decimal,
     pub average_tokens_per_request: f64,
+    pub cost_authority: CostAuthority,
 }
 
 // ===== Health Check Types =====
@@ -324,6 +356,18 @@ mod tests {
         };
 
         assert!(invalid_request.validate().is_err());
+    }
+
+    #[test]
+    fn test_cost_authority_default() {
+        let authority = CostAuthority::default();
+        assert_eq!(authority.source, "llm-costops");
+        assert!(authority.authoritative);
+        assert_eq!(authority.version, crate::VERSION);
+
+        let json = serde_json::to_string(&authority).unwrap();
+        assert!(json.contains("\"source\":\"llm-costops\""));
+        assert!(json.contains("\"authoritative\":true"));
     }
 
     #[test]

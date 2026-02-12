@@ -71,6 +71,14 @@ rust-toolchain.toml @maintainer-team
 
 # Governance and policies
 /docs/governance/ @maintainer-team @governance-team
+/docs/governance/COST_AUTHORITY.md @maintainer-team @governance-team @core-team
+
+# Architecture Decision Records
+/docs/adr/ @maintainer-team @architecture-team
+
+# Cost Authority CI enforcement
+/.github/workflows/reusable/cost-authority-lint.yml @devops-team @governance-team
+/.github/workflows/cost-authority-check.yml @devops-team @governance-team
 
 # GitHub issue and PR templates
 /.github/ISSUE_TEMPLATE/ @community-team

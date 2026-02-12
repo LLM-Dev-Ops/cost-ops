@@ -385,6 +385,7 @@ mod tests {
                 rejected: 0,
                 errors: vec![],
                 processed_at: Utc::now(),
+                cost_authority: super::super::models::CostAuthorityProvenance::default(),
             })
         }
 
@@ -399,6 +400,7 @@ mod tests {
                 rejected: 0,
                 errors: vec![],
                 processed_at: Utc::now(),
+                cost_authority: super::super::models::CostAuthorityProvenance::default(),
             })
         }
 

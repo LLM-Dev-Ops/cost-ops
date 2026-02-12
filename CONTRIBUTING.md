@@ -361,6 +361,25 @@ pub fn process() -> Result<(), CostError> {
 - Use `Arc` for shared ownership
 - Use `Cow` for clone-on-write scenarios
 
+## Cost Authority Compliance
+
+LLM-CostOps is the **single authoritative source** for all LLM cost data.
+See [COST_AUTHORITY.md](docs/governance/COST_AUTHORITY.md) for the full policy.
+
+When contributing, ensure:
+
+- **No local cost calculations**: Do not introduce code that hardcodes token
+  prices or replicates cost calculation logic outside the domain layer
+  (`crates/llm-cost-ops/src/domain/`) and engine layer
+  (`crates/llm-cost-ops/src/engine/`)
+- **Authority metadata preserved**: If modifying API response types, ensure
+  `CostAuthority` metadata is present on all cost-bearing responses
+- **SDK parity**: Changes to authority metadata in Rust API types must be
+  reflected in both the TypeScript SDK (`sdk/src/types/`) and Python SDK
+  (`python-sdk/llm_cost_ops/types.py`)
+- **CI workflow intact**: Do not remove or weaken the `cost-authority-lint`
+  CI workflow
+
 ## Testing Requirements
 
 ### Test Coverage

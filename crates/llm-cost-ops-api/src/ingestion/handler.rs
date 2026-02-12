@@ -10,7 +10,8 @@ use llm_cost_ops::{Result, UsageRecord};
 use llm_cost_ops::storage::UsageRepository;
 
 use super::models::{
-    IngestionError, IngestionResponse, IngestionStatus, UsageWebhookPayload,
+    CostAuthorityProvenance, IngestionError, IngestionResponse, IngestionStatus,
+    UsageWebhookPayload,
 };
 use super::traits::{IngestionHandler, IngestionStorage, PayloadValidator};
 
@@ -66,6 +67,7 @@ impl<S: UsageRepository + Clone> IngestionHandler for DefaultIngestionHandler<S>
                             rejected: 0,
                             errors: vec![],
                             processed_at: Utc::now(),
+                            cost_authority: CostAuthorityProvenance::default(),
                         })
                     }
                     Err(e) => {
@@ -87,6 +89,7 @@ impl<S: UsageRepository + Clone> IngestionHandler for DefaultIngestionHandler<S>
                                 field: None,
                             }],
                             processed_at: Utc::now(),
+                            cost_authority: CostAuthorityProvenance::default(),
                         })
                     }
                 }
@@ -110,6 +113,7 @@ impl<S: UsageRepository + Clone> IngestionHandler for DefaultIngestionHandler<S>
                         field: None,
                     }],
                     processed_at: Utc::now(),
+                    cost_authority: CostAuthorityProvenance::default(),
                 })
             }
         }
@@ -183,6 +187,7 @@ impl<S: UsageRepository + Clone> IngestionHandler for DefaultIngestionHandler<S>
             rejected,
             errors,
             processed_at: Utc::now(),
+            cost_authority: CostAuthorityProvenance::default(),
         })
     }
 

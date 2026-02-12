@@ -13,6 +13,7 @@ import {
 } from '../errors/index.js';
 import {
   createAuthInterceptor,
+  createCostAuthorityInterceptor,
   createLoggingInterceptor,
   MiddlewareManager,
   type ErrorContext,
@@ -62,6 +63,9 @@ export class BaseClient {
     if (this.config.apiKey !== '') {
       this.middleware.addRequestInterceptor(createAuthInterceptor(this.config.apiKey));
     }
+
+    // Add cost authority validation interceptor
+    this.middleware.addResponseInterceptor(createCostAuthorityInterceptor());
 
     // Add logging interceptor if debug is enabled
     if (this.config.debug) {

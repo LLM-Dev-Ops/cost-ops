@@ -60,6 +60,7 @@ pub async fn submit_usage(
         estimated_cost: rust_decimal::Decimal::ZERO,
         currency: llm_cost_ops::Currency::USD,
         processed_at: Utc::now(),
+        cost_authority: CostAuthority::default(),
     };
 
     Ok(Json(ApiResponse::new(response)))
@@ -95,6 +96,7 @@ pub async fn get_costs(
         period_start: query.start_date.unwrap_or_else(Utc::now),
         period_end: query.end_date.unwrap_or_else(Utc::now),
         breakdown: None,
+        cost_authority: CostAuthority::default(),
     };
 
     Ok(Json(ApiResponse::new(summary)))
@@ -130,6 +132,7 @@ pub async fn create_pricing(
         effective_date: request.effective_date.unwrap_or_else(Utc::now),
         created_at: Utc::now(),
         updated_at: Utc::now(),
+        cost_authority: CostAuthority::default(),
     };
 
     Ok(Json(ApiResponse::new(response)))
@@ -158,6 +161,7 @@ pub async fn get_analytics(
             total_requests: 0,
             average_cost_per_request: rust_decimal::Decimal::ZERO,
             average_tokens_per_request: 0.0,
+            cost_authority: CostAuthority::default(),
         },
     };
 

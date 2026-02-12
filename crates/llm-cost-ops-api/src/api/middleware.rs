@@ -24,3 +24,20 @@ pub async fn request_id_middleware(mut request: Request, next: Next) -> Response
 
     response
 }
+
+/// Cost authority header middleware.
+/// Adds `X-Cost-Authority` and `X-Cost-Authority-Version` headers to every
+/// API response, proving that cost data originates from the canonical
+/// LLM-CostOps service.
+pub async fn cost_authority_middleware(request: Request, next: Next) -> Response {
+    let mut response = next.run(request).await;
+    response.headers_mut().insert(
+        header::HeaderName::from_static("x-cost-authority"),
+        header::HeaderValue::from_static("llm-costops"),
+    );
+    response.headers_mut().insert(
+        header::HeaderName::from_static("x-cost-authority-version"),
+        header::HeaderValue::from_static(crate::VERSION),
+    );
+    response
+}

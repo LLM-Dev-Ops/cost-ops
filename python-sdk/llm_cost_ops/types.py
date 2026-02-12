@@ -100,6 +100,23 @@ class CostOpsModel(BaseModel):
         return super().model_dump_json(*args, **kwargs)
 
 
+# ===== Cost Authority =====
+
+
+class CostAuthority(CostOpsModel):
+    """Cost authority provenance metadata.
+
+    Present on all cost-bearing responses to prove data originated
+    from the canonical LLM-CostOps service. No other service may
+    independently compute or estimate LLM costs.
+    """
+
+    source: str = Field(default="llm-costops", description="Canonical source identifier")
+    authoritative: bool = Field(default=True, description="Whether from authoritative service")
+    version: str = Field(default="v1", description="Cost calculation engine version")
+    computed_at: Optional[datetime] = Field(default=None, description="Computation timestamp")
+
+
 # ===== Usage Models =====
 
 
@@ -137,6 +154,7 @@ class SubmitUsageResponse(CostOpsModel):
     estimated_cost: Decimal = Field(..., description="Estimated cost")
     currency: Currency = Field(..., description="Currency code")
     processed_at: datetime = Field(..., description="Processing timestamp")
+    cost_authority: Optional[CostAuthority] = Field(default=None, description="Cost authority provenance")
 
 
 # ===== Cost Models =====
@@ -162,6 +180,7 @@ class CostSummary(CostOpsModel):
     period_start: datetime = Field(..., description="Period start timestamp")
     period_end: datetime = Field(..., description="Period end timestamp")
     breakdown: Optional[List[CostBreakdown]] = Field(default=None, description="Cost breakdown")
+    cost_authority: Optional[CostAuthority] = Field(default=None, description="Cost authority provenance")
 
 
 # ===== Pricing Models =====
@@ -190,6 +209,7 @@ class PricingResponse(CostOpsModel):
     effective_date: datetime = Field(..., description="Effective date")
     created_at: datetime = Field(..., description="Creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")
+    cost_authority: Optional[CostAuthority] = Field(default=None, description="Cost authority provenance")
 
 
 # ===== Analytics Models =====
@@ -210,6 +230,7 @@ class AnalyticsSummary(CostOpsModel):
     total_requests: int = Field(..., ge=0, description="Total requests")
     average_cost_per_request: Decimal = Field(..., description="Average cost per request")
     average_tokens_per_request: float = Field(..., ge=0, description="Average tokens per request")
+    cost_authority: Optional[CostAuthority] = Field(default=None, description="Cost authority provenance")
 
 
 class AnalyticsResponse(CostOpsModel):
@@ -267,6 +288,7 @@ class ResponseMetadata(CostOpsModel):
     request_id: Optional[str] = Field(default=None, description="Request ID")
     timestamp: datetime = Field(default_factory=datetime.utcnow, description="Response timestamp")
     version: str = Field(default="v1", description="API version")
+    cost_authority: Optional[CostAuthority] = Field(default=None, description="Cost authority provenance")
 
 
 class APIResponse(CostOpsModel):

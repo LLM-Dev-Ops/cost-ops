@@ -6,7 +6,9 @@ with enterprise-grade features like automatic retries, rate limiting,
 and comprehensive error handling.
 """
 
+import logging
 import time
+import warnings
 from typing import Any, Dict, Optional
 from urllib.parse import urljoin
 
@@ -27,6 +29,26 @@ from ..exceptions import (
 from ..exceptions import (
     TimeoutError as SDKTimeoutError,
 )
+
+
+_cost_authority_logger = logging.getLogger("llm_cost_ops.cost_authority")
+
+
+def _validate_cost_authority_header(headers: httpx.Headers) -> None:
+    """Validate the X-Cost-Authority header is present and correct.
+
+    Logs a warning if the response does not carry the expected header,
+    indicating it may not have originated from the canonical LLM-CostOps API.
+    """
+    authority = headers.get("x-cost-authority", "")
+    if authority != "llm-costops":
+        msg = (
+            "Response missing X-Cost-Authority header. "
+            "Ensure you are connecting to the official LLM-CostOps API. "
+            "See: docs/governance/COST_AUTHORITY.md"
+        )
+        warnings.warn(msg, UserWarning, stacklevel=3)
+        _cost_authority_logger.warning(msg)
 
 
 class RateLimiter:
@@ -261,6 +283,9 @@ class SyncHTTPClient(BaseHTTPClient):
             # Extract request ID from response headers
             request_id = response.headers.get("X-Request-Id")
 
+            # Validate cost authority provenance
+            _validate_cost_authority_header(response.headers)
+
             # Check for error status codes
             if response.status_code >= 400:
                 response_body = None
@@ -407,6 +432,9 @@ class AsyncHTTPClient(BaseHTTPClient):
 
             # Extract request ID from response headers
             request_id = response.headers.get("X-Request-Id")
+
+            # Validate cost authority provenance
+            _validate_cost_authority_header(response.headers)
 
             # Check for error status codes
             if response.status_code >= 400:
