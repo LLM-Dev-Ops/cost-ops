@@ -327,6 +327,7 @@ impl SqliteCostRepository {
             calculated_at: DateTime::parse_from_rfc3339(&row.calculated_at)
                 .map(|dt| dt.with_timezone(&Utc))
                 .unwrap_or_else(|_| Utc::now()),
+            cost_authority_source: "llm-costops".to_string(),
         }
     }
 }
@@ -752,6 +753,7 @@ impl CostRepository for PostgresCostRepository {
                 project_id: r.project_id,
                 tags: serde_json::from_value(r.tags).unwrap_or_default(),
                 calculated_at: r.calculated_at,
+                cost_authority_source: "llm-costops".to_string(),
             }
         }))
     }
@@ -809,6 +811,7 @@ impl CostRepository for PostgresCostRepository {
                     project_id: r.project_id,
                     tags: serde_json::from_value(r.tags).unwrap_or_default(),
                     calculated_at: r.calculated_at,
+                    cost_authority_source: "llm-costops".to_string(),
                 }
             })
             .collect())
