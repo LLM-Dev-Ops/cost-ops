@@ -22,7 +22,7 @@ steps:
     args:
       - '-c'
       - |
-        apt-get update && apt-get install -y pkg-config libssl-dev libpq-dev libsqlite3-dev
+        apt-get update && apt-get install -y pkg-config libssl-dev libpq-dev libsqlite3-dev clang libclang-dev cmake libsasl2-dev libzstd-dev zlib1g-dev
         cargo test --all-features --release
 
   # Step 2: Run clippy linting
@@ -32,7 +32,7 @@ steps:
     args:
       - '-c'
       - |
-        apt-get update && apt-get install -y pkg-config libssl-dev libpq-dev libsqlite3-dev
+        apt-get update && apt-get install -y pkg-config libssl-dev libpq-dev libsqlite3-dev clang libclang-dev cmake libsasl2-dev libzstd-dev zlib1g-dev
         rustup component add clippy
         cargo clippy --all-targets --all-features -- -D warnings
     waitFor: ['test']
