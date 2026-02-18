@@ -1,6 +1,6 @@
 // API request handlers
 
-use axum::{extract::Query, Extension, Json};
+use axum::{extract::Query, http::StatusCode, Extension, Json};
 use chrono::Utc;
 use validator::Validate;
 
@@ -451,6 +451,42 @@ pub async fn cost_performance_info() -> ApiResult<Json<serde_json::Value>> {
             "optimization_recommendations"
         ]
     })))
+}
+
+// ===== Governance Event Handlers =====
+
+/// Handle inbound events from governance-core bundle fanout.
+///
+/// Internal-only endpoint. Accepts cost tracking events, logs them,
+/// and processes asynchronously. Returns 202 Accepted immediately.
+pub async fn receive_governance_event(
+    Json(event): Json<GovernanceEvent>,
+) -> (StatusCode, Json<EventAcceptedResponse>) {
+    tracing::info!(
+        execution_id = %event.execution_id,
+        source = %event.source,
+        event_type = %event.event_type,
+        "Received governance event"
+    );
+
+    let execution_id = event.execution_id.clone();
+
+    // Process asynchronously — fire and forget
+    tokio::spawn(async move {
+        tracing::info!(
+            execution_id = %event.execution_id,
+            "Processing governance event"
+        );
+        // TODO: Implement event processing (persist, forward to agents, etc.)
+    });
+
+    (
+        StatusCode::ACCEPTED,
+        Json(EventAcceptedResponse {
+            status: "accepted".to_string(),
+            execution_id,
+        }),
+    )
 }
 
 /// Cost attribution agent info

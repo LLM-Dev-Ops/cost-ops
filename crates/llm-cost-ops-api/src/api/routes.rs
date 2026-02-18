@@ -38,7 +38,9 @@ pub fn create_routes() -> Router {
         .route("/api/v1/agents/cost-performance/info", get(handlers::cost_performance_info))
         .route("/api/v1/agents/cost-performance/health", get(handlers::health_check))
         .route("/api/v1/agents/cost-attribution/info", get(handlers::cost_attribution_info))
-        .route("/api/v1/agents/cost-attribution/health", get(handlers::health_check));
+        .route("/api/v1/agents/cost-attribution/health", get(handlers::health_check))
+        // Governance event ingestion (internal-only, no auth)
+        .route("/api/v1/events", post(handlers::receive_governance_event));
 
     // Agent execution routes -- require execution context (x-execution-id, x-parent-span-id)
     let agent_exec_routes = Router::new()

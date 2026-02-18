@@ -287,6 +287,25 @@ pub struct AnalyticsSummary {
     pub cost_authority: CostAuthority,
 }
 
+// ===== Governance Event Types =====
+
+/// Inbound event from governance-core bundle fanout
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct GovernanceEvent {
+    pub source: String,
+    pub event_type: String,
+    pub execution_id: String,
+    pub timestamp: String,
+    pub payload: serde_json::Value,
+}
+
+/// Accepted response for governance events
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct EventAcceptedResponse {
+    pub status: String,
+    pub execution_id: String,
+}
+
 // ===== Health Check Types =====
 
 /// Health check response
