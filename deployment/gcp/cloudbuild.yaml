@@ -16,9 +16,11 @@ options:
 
 steps:
   # Step 1: Run tests
-  - name: 'rust:1.75-slim'
+  - name: 'rust:latest'
     id: 'test'
     entrypoint: 'bash'
+    env:
+      - 'SQLX_OFFLINE=true'
     args:
       - '-c'
       - |
@@ -26,9 +28,11 @@ steps:
         cargo test --all-features --release
 
   # Step 2: Run clippy linting
-  - name: 'rust:1.75-slim'
+  - name: 'rust:latest'
     id: 'lint'
     entrypoint: 'bash'
+    env:
+      - 'SQLX_OFFLINE=true'
     args:
       - '-c'
       - |
