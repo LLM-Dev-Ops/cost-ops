@@ -1,0 +1,29 @@
+{
+  "name": "@costops/costops-agents",
+  "version": "1.0.0",
+  "description": "Unified Cloud Function for all CostOps agents",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --platform=node --target=node20 --outfile=dist/index.js --format=cjs --external:@google-cloud/functions-framework",
+    "build:check": "tsc --noEmit",
+    "clean": "rm -rf dist",
+    "start": "npm run build && npx @google-cloud/functions-framework --target=handler --source=dist --port=8080",
+    "test": "node --test dist/handler.test.js",
+    "deploy": "npm run build && gcloud functions deploy costops-agents --runtime nodejs20 --trigger-http --region us-central1 --project agentics-dev --entry-point handler --memory 512MB --timeout 120s --no-allow-unauthenticated --source=."
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/uuid": "^9.0.7",
+    "esbuild": "^0.20.0",
+    "typescript": "^5.3.3",
+    "zod": "^3.22.4",
+    "decimal.js": "^10.4.3",
+    "uuid": "^9.0.1"
+  }
+}

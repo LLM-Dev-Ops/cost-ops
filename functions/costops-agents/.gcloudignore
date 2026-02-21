@@ -1,0 +1,29 @@
+# Source files (bundled into dist/)
+src/
+node_modules/
+
+# Development files
+*.ts
+tsconfig.json
+.env
+.env.local
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Git
+.git/
+
+# Test files
+**/*.test.*
+**/*.spec.*
+
+# Documentation
+*.md
+
+# Build artifacts not needed
+.eslintrc*
+.prettierrc*
