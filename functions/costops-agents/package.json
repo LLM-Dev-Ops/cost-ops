@@ -6,10 +6,11 @@
   "scripts": {
     "build": "esbuild src/index.ts --bundle --platform=node --target=node20 --outfile=dist/index.js --format=cjs --external:@google-cloud/functions-framework",
     "build:check": "tsc --noEmit",
+    "gcp-build": "",
     "clean": "rm -rf dist",
     "start": "npm run build && npx @google-cloud/functions-framework --target=handler --source=dist --port=8080",
     "test": "node --test dist/handler.test.js",
-    "deploy": "npm run build && gcloud functions deploy costops-agents --runtime nodejs20 --trigger-http --region us-central1 --project agentics-dev --entry-point handler --memory 512MB --timeout 120s --no-allow-unauthenticated --source=."
+    "deploy": "npm run build && gcloud functions deploy costops-agents --gen2 --runtime nodejs20 --trigger-http --region us-central1 --project agentics-dev --entry-point handler --memory 512MB --timeout 120s --no-allow-unauthenticated --source=."
   },
   "engines": {
     "node": ">=20.0.0"
