@@ -114,7 +114,7 @@ handlebars = "5.1"
 mime = "0.3"
 bytes = "1.5"
 cron = "0.12"
-chrono-tz = "0.8"
+chrono-tz = "0.10"
 
 # LLM-Dev-Ops Ecosystem Dependencies (Phase 2A compile-time only)
 llm-observatory-core = "= 0.1.1"
