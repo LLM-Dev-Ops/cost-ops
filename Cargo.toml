@@ -100,7 +100,7 @@ deadpool = "0.10"
 validator = { version = "0.16", features = ["derive"] }
 
 # Authentication & Security
-jsonwebtoken = "9.2"
+jsonwebtoken = "10.3"
 sha2 = "0.10"
 base64 = "0.21"
 constant_time_eq = "0.3"
