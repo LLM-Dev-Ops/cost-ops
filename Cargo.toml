@@ -70,7 +70,7 @@ hex = "0.4"
 
 # Compression
 flate2 = "1.0"
-brotli = "3.4"
+brotli = "8.0"
 http-body-util = "0.1"
 
 # Decimal precision for currency
