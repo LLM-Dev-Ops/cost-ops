@@ -31,7 +31,7 @@ rmp-serde = "1.1"  # Pin to avoid edition2024 requirement in newer versions
 # CLI
 clap = { version = "4.4", features = ["derive", "env", "color"] }
 console = "0.15"
-indicatif = "0.17"
+indicatif = "0.18"
 
 # Database
 sqlx = { version = "0.7", features = [
