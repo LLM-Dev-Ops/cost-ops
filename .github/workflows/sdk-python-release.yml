@@ -150,7 +150,7 @@ jobs:
 
       - name: Upload security reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: security-reports
           path: |
@@ -206,7 +206,7 @@ jobs:
           echo "::endgroup::"
 
       - name: Upload distribution artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: python-sdk-dist-${{ needs.validate.outputs.version }}
           path: ${{ env.WORKING_DIR }}/dist/
@@ -250,7 +250,7 @@ jobs:
           echo "::endgroup::"
 
       - name: Upload SBOM
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: sbom-${{ needs.validate.outputs.version }}
           path: |

@@ -120,7 +120,7 @@ jobs:
           test -f dist/index.d.ts || (echo "Type declarations missing" && exit 1)
 
       - name: Archive build artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-build
           path: sdk/dist/
@@ -193,7 +193,7 @@ jobs:
         run: npx typedoc --out docs/api src/index.ts --readme README.md --plugin typedoc-plugin-markdown || npx typedoc --out docs/api src/index.ts --readme README.md
 
       - name: Archive documentation
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: api-documentation
           path: sdk/docs/api/
