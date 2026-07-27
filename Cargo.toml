@@ -103,7 +103,7 @@ validator = { version = "0.16", features = ["derive"] }
 jsonwebtoken = "9.2"
 sha2 = "0.10"
 base64 = "0.21"
-constant_time_eq = "0.3"
+constant_time_eq = "0.5"
 rand = "0.8"
 
 # Export & Reporting
