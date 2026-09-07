@@ -102,7 +102,7 @@ validator = { version = "0.16", features = ["derive"] }
 # Authentication & Security
 jsonwebtoken = "9.2"
 sha2 = "0.10"
-base64 = "0.21"
+base64 = "0.23"
 constant_time_eq = "0.3"
 rand = "0.8"
 
