@@ -124,7 +124,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.updates.outputs.has-updates == 'true'
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'chore(python): update dependencies'
@@ -212,7 +212,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.updates.outputs.has-updates == 'true'
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'chore(typescript): update dependencies'
@@ -293,7 +293,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.updates.outputs.has-updates == 'true'
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'chore(rust): update dependencies'
@@ -367,7 +367,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.updates.outputs.has-updates == 'true'
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: 'chore(go): update dependencies'
