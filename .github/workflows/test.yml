@@ -302,7 +302,7 @@ jobs:
 
       - name: Comment PR with coverage
         if: github.event_name == 'pull_request'
-        uses: madrapps/jacoco-report@v1.3
+        uses: madrapps/jacoco-report@v1.8
         with:
           paths: coverage/cobertura.xml
           token: ${{ secrets.GITHUB_TOKEN }}
