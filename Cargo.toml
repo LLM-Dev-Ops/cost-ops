@@ -78,7 +78,7 @@ rust_decimal = { version = "1.33", features = ["serde-float"] }
 rust_decimal_macros = "1.33"
 
 # Configuration
-config = "0.14"
+config = "0.15"
 figment = { version = "0.10", features = ["toml", "env"] }
 
 # HTTP Server & Client
