@@ -6,6 +6,7 @@ repository_url=${COST_OPS_REPOSITORY_URL:-https://github.com/LLM-Dev-Ops/cost-op
 export CARGO_TARGET_DIR=${CARGO_TARGET_DIR:-/tmp/llm-dev-ops-cost-ops-target}
 export CARGO_INCREMENTAL=${CARGO_INCREMENTAL:-0}
 export CARGO_PROFILE_DEV_DEBUG=${CARGO_PROFILE_DEV_DEBUG:-0}
+export RUSTUP_TOOLCHAIN=${RUSTUP_TOOLCHAIN:-stable}
 work_dir=$(mktemp -d /tmp/cost-ops-compat.XXXXXX)
 trap 'rm -rf "$work_dir"' EXIT
 
