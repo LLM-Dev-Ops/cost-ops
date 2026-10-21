@@ -1,0 +1,45 @@
+name: Cargo Package Compatibility
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - Cargo.toml
+      - crates/cost-ops-compat/**
+      - crates/llm-cost-ops/**
+      - security/cargo-compat-contract.json
+      - security/verify-cargo-compat.sh
+      - .github/workflows/cargo-compat.yml
+
+permissions:
+  contents: read
+
+jobs:
+  compatibility:
+    name: Git dependency contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Rust 1.80.0
+        uses: actions-rust-lang/setup-rust-toolchain@166cdcfd11aee3cb47222f9ddb555ce30ddb9659 # v1
+        with:
+          toolchain: 1.80.0
+
+      - name: Verify canonical and compatibility packages
+        run: |
+          cargo metadata --no-deps --format-version 1 | jq -e '
+            (.packages | any(.name == "llm-cost-ops" and .version == "0.1.1")) and
+            (.packages | any(.name == "cost-ops" and .version == "0.1.1"))'
+          test "$(sed -n 's/^name = "\([^"]*\)"/\1/p' crates/llm-cost-ops/Cargo.toml | head -1)" = llm-cost-ops
+          grep -qx 'name = "llm_cost_ops"' crates/llm-cost-ops/Cargo.toml
+
+      - name: Test facade package
+        run: cargo test -p cost-ops
+
+      - name: Test real Git dependency consumer
+        run: bash security/verify-cargo-compat.sh "file://${GITHUB_WORKSPACE}" "${GITHUB_SHA}" "${RUNNER_TEMP}/cost-ops-consumer"
