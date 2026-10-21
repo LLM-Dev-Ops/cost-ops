@@ -8,7 +8,7 @@ export CARGO_TARGET_DIR=${CARGO_TARGET_DIR:-"$repo_root/.metaharness-cargo-targe
 export CARGO_INCREMENTAL=${CARGO_INCREMENTAL:-0}
 export CARGO_PROFILE_DEV_DEBUG=${CARGO_PROFILE_DEV_DEBUG:-0}
 export RUSTUP_TOOLCHAIN=${RUSTUP_TOOLCHAIN:-stable}
-work_root=${COST_OPS_WORK_ROOT:-$(dirname "$CARGO_TARGET_DIR")}
+work_root=${COST_OPS_WORK_ROOT:-$(dirname "$repo_root")}
 mkdir -p "$work_root"
 work_dir=$(mktemp -d "$work_root/cost-ops-compat.XXXXXX")
 trap 'rm -rf "$work_dir"' EXIT
