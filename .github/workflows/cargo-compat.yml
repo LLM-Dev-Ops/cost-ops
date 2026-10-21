@@ -19,6 +19,11 @@ jobs:
     name: Git dependency contract
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      # This job verifies package resolution and API compatibility. Strict
+      # warning enforcement remains the responsibility of the repository's
+      # existing Clippy/quality jobs.
+      RUSTFLAGS: ""
     steps:
       - name: Checkout exact candidate
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
