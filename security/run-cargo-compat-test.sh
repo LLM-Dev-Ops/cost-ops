@@ -7,7 +7,9 @@ export CARGO_TARGET_DIR=${CARGO_TARGET_DIR:-/tmp/llm-dev-ops-cost-ops-target}
 export CARGO_INCREMENTAL=${CARGO_INCREMENTAL:-0}
 export CARGO_PROFILE_DEV_DEBUG=${CARGO_PROFILE_DEV_DEBUG:-0}
 export RUSTUP_TOOLCHAIN=${RUSTUP_TOOLCHAIN:-stable}
-work_dir=$(mktemp -d /tmp/cost-ops-compat.XXXXXX)
+work_root=${COST_OPS_WORK_ROOT:-$(dirname "$CARGO_TARGET_DIR")}
+mkdir -p "$work_root"
+work_dir=$(mktemp -d "$work_root/cost-ops-compat.XXXXXX")
 trap 'rm -rf "$work_dir"' EXIT
 
 bash "$(dirname "$0")/verify-cargo-compat.sh" "$repository_url" "$revision" "$work_dir"
