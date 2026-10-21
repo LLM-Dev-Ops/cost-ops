@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "acceptanceFrozenAt": "2026-10-20T20:05:00-04:00",
+  "holdouts": [
+    "git dependency resolves package cost-ops",
+    "consumer compiles crate import cost_ops::VERSION",
+    "facade exports CostCalculator and CostRecord"
+  ],
+  "anchors": [
+    "canonical package remains llm-cost-ops",
+    "canonical library remains llm_cost_ops",
+    "canonical version remains 0.1.1",
+    "facade version matches canonical version",
+    "all original passing tests remain passing"
+  ],
+  "promotionRule": {
+    "requiredHoldouts": 3,
+    "requiredAnchors": 5,
+    "allowOriginalTestRegression": false
+  }
+}

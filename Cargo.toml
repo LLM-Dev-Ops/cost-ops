@@ -1,6 +1,7 @@
 [workspace]
 resolver = "2"
 members = [
+    "crates/cost-ops-compat",
     "crates/llm-cost-ops",
     "crates/llm-cost-ops-api",
     "crates/llm-cost-ops-cli",
