@@ -30,6 +30,7 @@ Thumbs.db
 # Build artifacts
 /dist/
 /build/
+/.metaharness-cargo-target/
 
 # Test artifacts
 /test-results/

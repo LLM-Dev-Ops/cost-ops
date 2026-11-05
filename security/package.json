@@ -1,0 +1,8 @@
+{
+  "name": "cost-ops-cargo-compat-evaluation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bash run-cargo-compat-test.sh"
+  }
+}

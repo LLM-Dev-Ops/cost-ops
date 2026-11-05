@@ -1,0 +1,18 @@
+[package]
+name = "cost-ops"
+version = "0.1.1"
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+description = "Compatibility facade for the llm-cost-ops core crate"
+publish = false
+
+[dependencies]
+llm-cost-ops = { path = "../llm-cost-ops", version = "0.1.1" }
+
+[lib]
+name = "cost_ops"
+path = "src/lib.rs"

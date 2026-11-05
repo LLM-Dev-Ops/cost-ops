@@ -1,0 +1,34 @@
+name: CostOps Agent Audit Contract
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - functions/costops-agents/**
+      - agents/**
+      - .github/workflows/costops-agent-audit.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: costops-agent-audit-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  audit-contract:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: functions/costops-agents
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.21.0'
+          cache: npm
+          cache-dependency-path: functions/costops-agents/package-lock.json
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Rebuild and test real handler responses
+        run: npm test
