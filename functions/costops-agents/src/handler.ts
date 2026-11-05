@@ -245,7 +245,11 @@ async function dispatchToAgent(
     res.status(capture.statusCode).json({
       ...(responseBody as Record<string, unknown>),
       execution_metadata: metadata,
-      layers_executed: buildLayers(agentName, 'completed', durationMs),
+      // Handlers report validation/backend failures through HTTP responses too,
+      // not only exceptions. Keep audit outcomes consistent with that response.
+      layers_executed: buildLayers(
+        agentName, capture.statusCode >= 400 ? 'failed' : 'completed', durationMs,
+      ),
     });
   } catch (error) {
     const durationMs = Date.now() - startTime;

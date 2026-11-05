@@ -219,7 +219,7 @@ describe('CostOps Agents Unified Handler', () => {
         (l: any) => l.layer === 'COSTOPS_ATTRIBUTION'
       );
       assert.ok(agentLayer, 'Must have COSTOPS_ATTRIBUTION layer');
-      assert.equal(agentLayer.status, 'completed');
+      assert.equal(agentLayer.status, r.statusCode >= 400 ? 'failed' : 'completed');
       assert.ok(typeof agentLayer.duration_ms === 'number');
     });
   });
@@ -274,7 +274,7 @@ describe('CostOps Agents Unified Handler', () => {
         (l: any) => l.layer === 'COSTOPS_ROI'
       );
       assert.ok(agentLayer, 'Must have COSTOPS_ROI layer');
-      assert.equal(agentLayer.status, 'completed');
+      assert.equal(agentLayer.status, r.statusCode >= 400 ? 'failed' : 'completed');
     });
   });
 
@@ -325,7 +325,7 @@ describe('CostOps Agents Unified Handler', () => {
         (l: any) => l.layer === 'COSTOPS_TRADEOFF'
       );
       assert.ok(agentLayer, 'Must have COSTOPS_TRADEOFF layer');
-      assert.equal(agentLayer.status, 'completed');
+      assert.equal(agentLayer.status, r.statusCode >= 400 ? 'failed' : 'completed');
     });
   });
 
