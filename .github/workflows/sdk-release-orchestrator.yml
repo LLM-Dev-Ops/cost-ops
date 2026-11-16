@@ -250,7 +250,7 @@ jobs:
           path: ./artifacts
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ needs.detect-sdk.outputs.sdk }}-v${{ needs.detect-sdk.outputs.version }}
           name: ${{ needs.detect-sdk.outputs.sdk }} SDK v${{ needs.detect-sdk.outputs.version }}
